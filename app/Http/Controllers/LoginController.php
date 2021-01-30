@@ -37,7 +37,7 @@ class LoginController extends Controller
             return redirect()->intended('/');
         } else {
             throw ValidationException::withMessages([
-                $this->username() => [trans('auth.failed')],
+                'email' => [trans('auth.failed')],
             ]);
         }
     }

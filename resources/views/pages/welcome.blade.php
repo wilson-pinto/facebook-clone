@@ -40,6 +40,42 @@
 
         </button>
     </div>
+
+    @foreach ($posts as $post)
+    <div class="row justify-content-around bg-white shadow-sm py-3 mx-0 mt-3 rounded-lg">
+        <div class="col px-0">
+            <div class="d-flex align-items-center pl-3">
+                <img src="/img/profile/{{$post->user->img_url}}" alt="" class="rounded-circle"
+                    style="width: 40px; height: 40px;">
+                <div class="d-flex justify-content-center flex-column ml-2">
+                    <p class="font-weight-bold mb-0" style="line-height: 1;">{{$post->user->name}}</p>
+                    <p class="text-secondary mb-0" style="font-size: 12px;">
+                        {{ \Carbon\Carbon::parse($post->user->created_at)->diffForhumans() }}</p>
+                </div>
+            </div>
+            <p class="mt-3 mb-0 px-3 text-secondary">
+                {{$post->caption}}
+            </p>
+            <img src="/img/post/{{$post->img_url}}" class="w-100 mt-2" alt="">
+            <div class="row mx-0 px-3 mt-3 font-weight-bold">
+                <div class="d-flex">
+                    <button class="btn-none" value="{{$post->isLiked(Auth::id())  != null ?  1 : 0 }}"
+                        onclick="like({{$post->id}}, $(this), $(this).siblings('.count'))">
+                        <i class="fa {{$post->isLiked(Auth::id())  != null ?  'fa-heart' : 'fa-heart-o' }} text-danger"
+                            aria-hidden="true"></i>
+                    </button>
+                    <p class="mb-0 pl-3 count">
+                        {{$post->likes_count}} Like{{$post->likes_count == 1 ?'' : 's'}}
+                    </p>
+                </div>
+                <p class="mb-0 pl-5">
+                    <i class="fa fa-comment-o" aria-hidden="true"></i> &nbsp;
+                    {{$post->comments_count}} Comment{{$post->comments_count == 1 ?'' : 's'}}
+                </p>
+            </div>
+        </div>
+    </div>
+    @endforeach
 </div>
 
 <div class="modal fade" id="createPostModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
@@ -55,21 +91,20 @@
                         </button>
                     </div>
 
-                    <form action="" class="w-100 px-3">
+                    <form enctype="multipart/form-data" action="/create-post" method="POST" class="w-100 px-3">
+                        @csrf
                         <input id="postImage" type="file" name="postImage"
                             class="d-none form-control @error('profile') is-invalid @enderror">
                         <div class="row w-100 mt-3 mx-0">
                             <div class="form-group w-100">
                                 <input type="text" class="form-control border-top-0 border-right-0 border-left-0"
-                                    placeholder="What's on your mind?" name="title">
+                                    placeholder="What's on your mind?" name="caption">
                             </div>
                         </div>
                         <img id="postImgPlaceHolder" src="/img/no-img.png" class="w-100 mt-2" alt="">
                         <button type="submit" class="btn-primary btn w-100 font-weight-bold mt-3 mb-3">Post</button>
                     </form>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -97,5 +132,40 @@
             reader.readAsDataURL( imageFile );
          }
     });
+
+
+    function like(postId, btn, p){
+        var status = parseInt(btn.val()) ;
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        });
+        $.ajax({
+             type: "POST",
+             url: "/like",
+             dataType: 'json',
+             data: {
+                 postId: postId,
+                 status: status,
+             },
+             success: function (data) {
+                 btn.val(status == 1 ? 0 : 1)
+                 var epo =  data.count == 1 ? '' : 's';
+                 p.html(data.count + ' Like' + epo)
+                 if(parseInt(btn.val()) == 0){
+                    btn.children('i').removeClass('fa-heart');
+                    btn.children('i').addClass('fa-heart-o');
+                 } else{
+                    btn.children('i').removeClass('fa-heart-o');
+                    btn.children('i').addClass('fa-heart');
+                 }
+             },
+             error: function (data) {
+                 console.log(data);
+             }
+        });
+    }
 </script>
 @endsection

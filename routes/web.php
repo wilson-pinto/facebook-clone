@@ -21,7 +21,7 @@ Route::post('/register', 'RegisterController@register');
 
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('/', function () {
-        return view('pages.welcome');
-    });
+    Route::post('/create-post', 'PostController@createPost');
+    Route::get('/', 'PostController@index');
+    Route::post('like', 'PostController@like');
 });
