@@ -1,7 +1,16 @@
+$primaryColor : #007bff;
+$grey : #f1f1f1;
+$darkGrey : #dedede;
+
 .nav-item{
     padding: 5px 40px !important;
     .fa{
         font-size: 25px !important;
+    }
+    &.active{
+        .fa{
+            color: $primaryColor;
+        }
     }
 }
 
@@ -13,4 +22,56 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.profile{
+    height: 60px !important;
+    width: 60px !important;
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.story-placeholder{
+    height: 15vh;
+    border-radius: 10px;
+    background: $darkGrey !important;
+}
+
+.btn-create{
+    .fa{
+        font-size: 50px;
+        color: #fff;
+    }
+}
+
+.btn-none{
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+}
+
+.home-picker{
+  .fa{
+      color: $primaryColor;
+  }
+  transition: .5s;
+  padding: 5px 20px;
+
+  border-radius: 15px;
+
+  &:hover{
+      background: $grey;
+  }
+}
+
+.modal-close{
+    position: absolute;
+    right: -3%;
+    top: 0%;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.0rem;
 }

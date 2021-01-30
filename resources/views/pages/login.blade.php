@@ -9,23 +9,33 @@
             nulla excepturi, animi ex earum ea facilis! Nam tempora architecto atque veniam, dolores maiores facilis!
         </p>
     </div>
-    <div class="col-4 m-3 shadow p-4 rounded-lg">
+    <div class="col-4 m-3 shadow-sm bg-white p-4 rounded-lg">
         <h3 class="text-primary mb-3">Login</h3>
-        <form>
+        <form action="/login" method="POST">
+            @csrf
             <div class="form-group">
                 <label for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
-                    else.</small>
+                <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
+                    value="test@test.com" aria-describedby="emailHelp">
+                @error('email')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1">
+                <input value="Password" type="password" class="form-control @error('password') is-invalid @enderror"
+                    name="password">
+                @error('password')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
             </div>
-            <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Check me out</label>
-            </div>
+
+            <p class="text-secondary">Don't have an Account? <a href="/register">Sign Up</a></p>
+
             <button type="submit" class="btn btn-primary w-100 mb-3">Submit</button>
         </form>
     </div>

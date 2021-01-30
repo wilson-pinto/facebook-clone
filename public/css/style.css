@@ -6,6 +6,10 @@
   font-size: 25px !important;
 }
 
+.nav-item.active .fa {
+  color: #007bff;
+}
+
 .h-70vh {
   height: 70vh;
 }
@@ -20,5 +24,58 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+}
+
+.profile {
+  height: 60px !important;
+  width: 60px !important;
+  -o-object-fit: cover;
+     object-fit: cover;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.story-placeholder {
+  height: 15vh;
+  border-radius: 10px;
+  background: #dedede !important;
+}
+
+.btn-create .fa {
+  font-size: 50px;
+  color: #fff;
+}
+
+.btn-none {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+}
+
+.home-picker {
+  -webkit-transition: .5s;
+  transition: .5s;
+  padding: 5px 20px;
+  border-radius: 15px;
+}
+
+.home-picker .fa {
+  color: #007bff;
+}
+
+.home-picker:hover {
+  background: #f1f1f1;
+}
+
+.modal-close {
+  position: absolute;
+  right: -3%;
+  top: 0%;
+}
+
+.form-control:focus {
+  -webkit-box-shadow: 0 0 0 0.0rem;
+          box-shadow: 0 0 0 0.0rem;
 }
 /*# sourceMappingURL=style.css.map */

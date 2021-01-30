@@ -3,28 +3,49 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
 
-    protected function guard()
-    {
-        return Auth::guard('auth');
-    }
-
-    protected $redirectTo = '/home';
-
-    use AuthenticatesUsers;
+    protected $redirectTo = '/';
 
     public function __construct()
     {
-        $this->middleware('auth')->except('logout');
+        $this->middleware('guest')->except('logout');
     }
 
     public function showLoginForm()
     {
-        return view('login');
+        return view('pages.login');
+    }
+
+    protected function guard()
+    {
+        return Auth::guard();
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            return redirect()->intended('/');
+        } else {
+            throw ValidationException::withMessages([
+                $this->username() => [trans('auth.failed')],
+            ]);
+        }
+    }
+
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/');
     }
 }
