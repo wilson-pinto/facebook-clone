@@ -48,7 +48,8 @@
                 <img src="/img/profile/{{$post->user->img_url}}" alt="" class="rounded-circle"
                     style="width: 40px; height: 40px;">
                 <div class="d-flex justify-content-center flex-column ml-2">
-                    <p class="font-weight-bold mb-0" style="line-height: 1;">{{$post->user->name}}</p>
+                    <p class="font-weight-bold mb-0" style="line-height: 1;">
+                        {{$post->user_id == Auth::id() ? 'You' : $post->user->name}}</p>
                     <p class="text-secondary mb-0" style="font-size: 12px;">
                         {{ \Carbon\Carbon::parse($post->created_at)->diffForhumans() }}</p>
                 </div>
@@ -131,13 +132,13 @@
 
                     </div>
 
-                    <form class="w-100 px-3">
+                    <form class="w-100 px-3 my-2">
                         <input id="postImage" type="file" name="postImage" class="d-none form-control">
-                        <div class="w-100 row mt-3 center">
+                        <div class="w-100 row mx-0 mt-3 align-items-center justify-content-between">
                             <input type="text" class="comment-input" id="commentInput"
                                 placeholder="Write a public comment....." name="caption">
                             <button type="button" onclick="submitComment();"
-                                class="btn-primary btn font-weight-bold text-white btn-send-comment center ml-2">
+                                class="btn-primary btn font-weight-bold text-white btn-send-comment center">
                                 <i class="fa fa-paper-plane" aria-hidden="true"></i>
                             </button>
                         </div>

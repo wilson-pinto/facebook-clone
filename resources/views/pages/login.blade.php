@@ -15,8 +15,8 @@
             @csrf
             <div class="form-group">
                 <label for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
-                    value="test@test.com" aria-describedby="emailHelp">
+                <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value=""
+                    aria-describedby="emailHelp">
                 @error('email')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -25,7 +25,7 @@
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
-                <input value="Password" type="password" class="form-control @error('password') is-invalid @enderror"
+                <input value="12345678" type="password" class="form-control @error('password') is-invalid @enderror"
                     name="password">
                 @error('password')
                 <span class="invalid-feedback" role="alert">
