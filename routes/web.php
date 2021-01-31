@@ -13,15 +13,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/login', 'LoginController@showLoginForm')->name('login');
-Route::post('/login', 'LoginController@login');
+Route::get('login', 'LoginController@showLoginForm')->name('login');
+Route::post('login', 'LoginController@login');
 
-Route::get('/register', 'RegisterController@showRegForm')->name('register');
-Route::post('/register', 'RegisterController@register');
+Route::get('register', 'RegisterController@showRegForm')->name('register');
+Route::post('register', 'RegisterController@register');
 
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::post('/create-post', 'PostController@createPost');
+    Route::post('create-post', 'PostController@createPost');
     Route::get('/', 'PostController@index');
     Route::post('like', 'PostController@like');
+    Route::get('comments/{postId}', 'PostController@getComments');
+    Route::post('comment', 'PostController@postComment');
 });

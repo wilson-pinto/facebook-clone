@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\UserLikeMapping;
 use Illuminate\Http\Request;
@@ -33,6 +34,7 @@ class PostController extends Controller
         $posts = Post::withCount('likes')
             ->withCount('comments')
             ->with('user')
+            ->orderBy('id', 'DESC')
             ->get();
         return view('pages.welcome', compact('posts'));
     }
@@ -52,5 +54,25 @@ class PostController extends Controller
 
         $data['count'] = UserLikeMapping::where('post_id', $request->postId)->count();
         return json_encode($data);
+    }
+
+    public function getComments($postId)
+    {
+        $comments = Comment::where('post_id', $postId)->with('user')->get();
+        return view('includes.comments', compact('comments'));
+    }
+
+    public function postComment(Request $request)
+    {
+
+        $comment = new Comment();
+        $comment->comment = $request->comment;
+        $comment->post_id = $request->postId;
+        $comment->user_id = Auth::id();
+
+        $comment->save();
+
+        $comments = Comment::where('post_id', $request->postId)->with('user')->get();
+        return view('includes.comments', compact('comments'));
     }
 }

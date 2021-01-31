@@ -78,4 +78,21 @@
   -webkit-box-shadow: 0 0 0 0.0rem;
           box-shadow: 0 0 0 0.0rem;
 }
+
+.btn-send-comment {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  line-height: 0;
+  padding-left: 9px !important;
+  font-size: 15px;
+}
+
+.comment-input {
+  border: none;
+  background: none;
+  border-bottom: 1px solid #f1f1f1;
+  width: 85%;
+  outline: none;
+}
 /*# sourceMappingURL=style.css.map */

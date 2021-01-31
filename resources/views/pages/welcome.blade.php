@@ -50,7 +50,7 @@
                 <div class="d-flex justify-content-center flex-column ml-2">
                     <p class="font-weight-bold mb-0" style="line-height: 1;">{{$post->user->name}}</p>
                     <p class="text-secondary mb-0" style="font-size: 12px;">
-                        {{ \Carbon\Carbon::parse($post->user->created_at)->diffForhumans() }}</p>
+                        {{ \Carbon\Carbon::parse($post->created_at)->diffForhumans() }}</p>
                 </div>
             </div>
             <p class="mt-3 mb-0 px-3 text-secondary">
@@ -69,8 +69,14 @@
                     </p>
                 </div>
                 <p class="mb-0 pl-5">
-                    <i class="fa fa-comment-o" aria-hidden="true"></i> &nbsp;
-                    {{$post->comments_count}} Comment{{$post->comments_count == 1 ?'' : 's'}}
+                    <span onclick="comment({{$post->id}}, $(this), $(this).siblings('.comment-count'))"
+                        style="cursor: pointer">
+                        <i class="fa fa-comment-o" aria-hidden="true"></i> &nbsp;
+                    </span>
+                    <input class="ip-comment-count" type="hidden" value="{{$post->comments_count}}">
+                    <span class="comment-count">
+                        {{$post->comments_count}} Comment{{$post->comments_count == 1 ?'' : 's'}}
+                    </span>
                 </p>
             </div>
         </div>
@@ -93,8 +99,7 @@
 
                     <form enctype="multipart/form-data" action="/create-post" method="POST" class="w-100 px-3">
                         @csrf
-                        <input id="postImage" type="file" name="postImage"
-                            class="d-none form-control @error('profile') is-invalid @enderror">
+                        <input id="postImage" type="file" name="postImage" class="d-none form-control">
                         <div class="row w-100 mt-3 mx-0">
                             <div class="form-group w-100">
                                 <input type="text" class="form-control border-top-0 border-right-0 border-left-0"
@@ -110,12 +115,50 @@
     </div>
 </div>
 
+<div class="modal fade" id="commentModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="col px-0">
+                    <div class="row center position-relative mx-3 mt-2">
+                        <h4>Comments</h4>
+                        <button type="button" class="close modal-close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="col px-0 comment-placeholder">
+
+                    </div>
+
+                    <form class="w-100 px-3">
+                        <input id="postImage" type="file" name="postImage" class="d-none form-control">
+                        <div class="w-100 row mt-3 center">
+                            <input type="text" class="comment-input" id="commentInput"
+                                placeholder="Write a public comment....." name="caption">
+                            <button type="button" onclick="submitComment();"
+                                class="btn-primary btn font-weight-bold text-white btn-send-comment center ml-2">
+                                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 
 
 @section('scripts')
 <script>
+    var currentCommentCiuntPlaceHolder = "";
+    var currentPostId = 0;
+    var commentCount = 0;
+
     $("#imgPicker").click(function(e) {
         $("#postImage").click();
     });
@@ -161,6 +204,63 @@
                     btn.children('i').removeClass('fa-heart-o');
                     btn.children('i').addClass('fa-heart');
                  }
+             },
+             error: function (data) {
+                 console.log(data);
+             }
+        });
+    }
+
+
+    function comment(postId, btn, span){
+
+        currentCommentCiuntPlaceHolder = span
+        currentPostId =  parseInt(postId) 
+        commentCount = parseInt(currentCommentCiuntPlaceHolder.siblings('.ip-comment-count').val());
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        });
+        $.ajax({
+             type: "GET",
+             url: "/comments/" + parseInt(postId),
+             success: function (data) {
+                $('#commentModal').modal('show')
+                $('.comment-placeholder').empty();
+                $('.comment-placeholder').append(data);
+             },
+             error: function (data) {
+                 console.log(data);
+             }
+        });
+
+    }
+
+    function submitComment(){
+        var comment = $('#commentInput').val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        });
+        $.ajax({
+             type: "POST",
+             url: "/comment",
+             data: {
+                 postId: currentPostId,
+                 comment: comment,
+             },
+             success: function (data) {
+                $('.comment-placeholder').empty();
+                $('.comment-placeholder').append(data);
+                currentCommentCiuntPlaceHolder.siblings('.ip-comment-count').val(commentCount++)
+
+                var epo =  commentCount == 1 ? '' : 's';
+                currentCommentCiuntPlaceHolder.html(commentCount + ' Comment' + epo);
+
+                $('#commentInput').val("");
              },
              error: function (data) {
                  console.log(data);
