@@ -1,17 +1,17 @@
 ### Create project
 `composer create-project laravel/laravel project-name`
 
-###Create Migration
+### Create Migration
 `php artisan migrate`
 
-###Reset Migration
+### Reset Migration
 `php artisan migrate:reset`
 
-###Create Model with Migration
+### Create Model with Migration
 `php artisan make:model ModelName --migration`
 
-###Make Seeder
+### Make Seeder
 `php artisan make:seeder SeederName`
 
-###Run Seeder
+### Run Seeder
 `php artisan db:seed --class=SeederName`
